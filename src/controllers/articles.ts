@@ -99,4 +99,69 @@ export class ArticlesController {
       article,
     });
   };
+
+  static createArticleRating = async (req: Request, res: Response) => {
+    const { 
+      user, 
+    } = req;
+
+    const {
+      _id,
+    } = req.params;
+
+    const {
+      value,
+    } = req.body;
+
+    if (!user) {
+      throw new UnauthenticatedError();
+    }
+
+    if (!_id) {
+      throw new BadRequestError("Id is not supplied or is invalid.");
+    }
+
+    if (!value) {
+      throw new BadRequestError("Valid is not supplied or is invalid.");
+    }
+
+    const { rating } = await ArticlesService.createArticleRating({
+      _id,
+      userId: user._id,
+      value,
+    });
+
+    res.json({
+      status: "success",
+      rating,
+    });
+  };
+
+  static getArticleRatings = async (req: Request, res: Response) => {
+    const { 
+      user, 
+    } = req;
+
+    const {
+      _id,
+    } = req.params;
+
+    if (!user) {
+      throw new UnauthenticatedError();
+    }
+
+    if (!_id) {
+      throw new BadRequestError("Id is not supplied or is invalid.");
+    }
+
+    const { ratings, aggregate } = await ArticlesService.getArticleRatings({
+      _id,
+    });
+
+    res.json({
+      status: "success",
+      ratings,
+      aggregate,
+    });
+  };
 }
