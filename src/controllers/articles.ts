@@ -70,18 +70,6 @@ export class ArticlesController {
       throw new UnauthenticatedError();
     }
 
-    if (!title) {
-      throw new BadRequestError("No article title provided.");
-    }
-
-    if (!subtitle) {
-      throw new BadRequestError("No article subtitle provided.");
-    }
-
-    if (!description) {
-      throw new BadRequestError("No article description provided.");
-    }
-
     if (!articleUrl) {
       throw new BadRequestError("No article url provided.");
     }
@@ -138,29 +126,20 @@ export class ArticlesController {
   };
 
   static getArticleRatings = async (req: Request, res: Response) => {
-    const { 
-      user, 
-    } = req;
-
     const {
       _id,
     } = req.params;
-
-    if (!user) {
-      throw new UnauthenticatedError();
-    }
 
     if (!_id) {
       throw new BadRequestError("Id is not supplied or is invalid.");
     }
 
-    const { ratings, aggregate } = await ArticlesService.getArticleRatings({
+    const { aggregate } = await ArticlesService.getArticleRatings({
       _id,
     });
 
     res.json({
       status: "success",
-      ratings,
       aggregate,
     });
   };

@@ -4,6 +4,7 @@ import { IUser, User } from "@/models/user";
 
 import { BadRequestError } from "@/helpers/errors";
 import { aggregateRatings } from "@/helpers/ratings";
+import { ingestArticle } from "@/queues/articles";
 
 export class ArticlesService {
   static getArticles = async ({
@@ -43,9 +44,9 @@ export class ArticlesService {
     articleUrl,
     createdBy,
   }: {
-    title: IArticle["title"];
-    subtitle: IArticle["subtitle"];
-    description: IArticle["description"];
+    title?: IArticle["title"];
+    subtitle?: IArticle["subtitle"];
+    description?: IArticle["description"];
     articleUrl: IArticle["articleUrl"];
     createdBy?: IArticle["createdBy"];
   }) => {
@@ -56,6 +57,8 @@ export class ArticlesService {
       articleUrl,
       createdBy,
     });
+
+    ingestArticle(article);
 
     return {
       article,

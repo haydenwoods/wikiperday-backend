@@ -6,11 +6,13 @@ import { UNAUTHENTICATED_ERROR } from "@/helpers/errors";
 
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const jwt = req.get("Authorization");
+    let jwt = req.get("Authorization");
 
     if (!jwt) {
       throw new Error("No JWT provided.");
     }
+
+    jwt = jwt.replace("Bearer", "").trim();
 
     const { user } = await AuthService.session({ jwt });
 

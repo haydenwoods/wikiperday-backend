@@ -1,7 +1,9 @@
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import { json } from "body-parser";
+
+import "@/queues/articles";
 
 import router from "@/routes";
 
@@ -23,9 +25,14 @@ app.use(errorHandler);
 mongoose.connect(MONGO_URL, { 
   useCreateIndex: true,
   useNewUrlParser: true, 
-  useUnifiedTopology: true 
-}, () => {
-  console.log("Database connected");
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+}, (error) => {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log("Database connected");
+  }
 });
 
 app.listen(PORT, () => {
